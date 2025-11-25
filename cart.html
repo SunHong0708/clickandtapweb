@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Click & Tap | Cart</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav">
+    <div class="logo">Click & <span>Tap</span></div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="index.html#contact">Contact</a>
+      <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <section class="hero small-hero">
+    <h1 class="hero-title">Your Cart</h1>
+    <p class="hero-subtitle">Review your items before ordering.</p>
+  </section>
+
+  <section>
+    <table class="cart-table" id="cart-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Image</th>
+          <th>Price</th>
+          <th>Qty</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody id="cart-items">
+        <!-- JS will fill this -->
+      </tbody>
+    </table>
+
+    <p id="cart-empty" style="display:none;">Your cart is empty.</p>
+
+    <div id="cart-total-wrapper">
+      <p><strong>Total: $<span id="cart-total">0.00</span></strong></p>
+    </div>
+
+    <div style="margin-top: 10px; display:flex; gap:10px; flex-wrap:wrap;">
+      <button id="clear-cart" class="btn-add-cart">Clear cart</button>
+
+      <!-- go to backend checkout page -->
+      <a href="checkout.html" class="btn-add-cart">
+        Proceed to checkout →
+      </a>
+
+      <!-- optional direct Telegram contact -->
+      <a href="https://t.me/sunhong1" target="_blank" class="btn-add-cart">
+        Contact on Telegram
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <p>© <span id="year"></span> Click & Tap</p>
+</footer>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  function getCart() {
+    const data = localStorage.getItem("clickTapCart");
+    return data ? JSON.parse(data) : [];
+  }
+
+  function saveCart(cart) {
+    localStorage.setItem("clickTapCart", JSON.stringify(cart));
+  }
+
+  function updateCartCount() {
+    const cartCountEl = document.getElementById("cart-count");
+    if (!cartCountEl) return;
+    const cart = getCart();
+    const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+    cartCountEl.textContent = totalQty;
+  }
+
+  function renderCart() {
+    const cart = getCart();
+    const tbody = document.getElementById("cart-items");
+    const emptyMsg = document.getElementById("cart-empty");
+    const totalEl = document.getElementById("cart-total");
+    const tableEl = document.getElementById("cart-table");
+
+    tbody.innerHTML = "";
+    let total = 0;
+
+    if (cart.length === 0) {
+      emptyMsg.style.display = "block";
+      tableEl.style.display = "none";
+      totalEl.textContent = "0.00";
+      return;
+    } else {
+      emptyMsg.style.display = "none";
+      tableEl.style.display = "table";
+    }
+
+    cart.forEach(item => {
+      const subtotal = item.price * item.qty;
+      total += subtotal;
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${item.name}</td>
+        <td><img src="${item.img}" style="width:60px; border-radius:6px;"></td>
+        <td>$${item.price.toFixed(2)}</td>
+        <td>${item.qty}</td>
+        <td>$${subtotal.toFixed(2)}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    totalEl.textContent = total.toFixed(2);
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    updateCartCount();
+    renderCart();
+
+    const clearBtn = document.getElementById("clear-cart");
+    if (clearBtn) {
+      clearBtn.addEventListener("click", () => {
+        if (confirm("Clear all items from cart?")) {
+          saveCart([]);
+          updateCartCount();
+          renderCart();
+        }
+      });
+    }
+  });
+</script>
+
+</body>
+</html>

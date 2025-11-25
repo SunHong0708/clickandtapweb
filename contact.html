@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Click & Tap | Contact</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav">
+    <div class="logo">Click & <span>Tap</span></div>
+
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="contact.html">Contact</a>
+      <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <section class="hero small-hero">
+    <h1 class="hero-title">Contact Us</h1>
+    <p class="hero-subtitle">
+      Reach out to Click & Tap anytime — we reply fast.
+    </p>
+  </section>
+
+  <section>
+    <h2 class="section-title-small">Our Telegram</h2>
+    <p style="font-size: 1rem; margin-bottom: 10px;">
+      👉 **Personal Telegram:**  
+      <a href="https://t.me/sunhong1" target="_blank" style="color:#66fcf1; font-weight:bold;">
+        @sunhong1
+      </a>
+    </p>
+
+    <p style="font-size: 1rem;">
+      👉 **Telegram Channel:**  
+      <a href="https://t.me/clickntap1" target="_blank" style="color:#66fcf1; font-weight:bold;">
+       /t.me/clickntap1
+      </a>
+    </p>
+
+  </section>
+</main>
+
+<footer class="site-footer">
+  <p>© <span id="year"></span> Click & Tap</p>
+</footer>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  function getCart() {
+    const data = localStorage.getItem("clickTapCart");
+    return data ? JSON.parse(data) : [];
+  }
+
+  function updateCartCount() {
+    const cartCountEl = document.getElementById("cart-count");
+    if (!cartCountEl) return;
+    const cart = getCart();
+    const totalQty = cart.reduce((sum, item) => sum + (item.qty || 0), 0);
+    cartCountEl.textContent = totalQty;
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    updateCartCount();
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Click & Tap | Checkout</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav">
+    <div class="logo">Click & <span>Tap</span></div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+    <a href="contact.html">Contact</a>
+      <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <section class="hero small-hero">
+    <h1 class="hero-title">Checkout</h1>
+    <p class="hero-subtitle">Confirm your cart and fill in your info.</p>
+  </section>
+
+  <!-- Order summary -->
+  <section>
+    <h2 class="section-title-small">Order summary</h2>
+    <table class="cart-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Qty</th>
+          <th>Price</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody id="checkout-items">
+        <!-- JS fills here -->
+      </tbody>
+    </table>
+    <p><strong>Total: $<span id="checkout-total">0.00</span></strong></p>
+  </section>
+
+  <!-- Checkout form -->
+  <section>
+    <h2 class="section-title-small">Your details</h2>
+
+    <form action="backend/place_order.php" method="post">
+
+      <div>
+        <label for="name">Full name</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+
+      <div>
+        <label for="phone">Phone number</label>
+        <input type="text" id="phone" name="phone" required>
+      </div>
+
+      <div>
+        <label for="address">Address</label>
+        <textarea id="address" name="address" required></textarea>
+      </div>
+
+      <div>
+        <label for="telegram">Telegram (optional)</label>
+        <input type="text" id="telegram" name="telegram" placeholder="@sunhong1">
+      </div>
+
+      <!-- Hidden field: cart JSON -->
+      <input type="hidden" name="cart_data" id="cart_data">
+
+      <button type="submit" class="btn btn-primary">Place order</button>
+    </form>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <p>© <span id="year"></span> Click & Tap</p>
+</footer>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  function getCart() {
+    const data = localStorage.getItem("clickTapCart");
+    return data ? JSON.parse(data) : [];
+  }
+
+  function updateCartCount() {
+    const cartCountEl = document.getElementById("cart-count");
+    if (!cartCountEl) return;
+    const cart = getCart();
+    const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+    cartCountEl.textContent = totalQty;
+  }
+
+  function renderCheckout() {
+    const cart = getCart();
+    const tbody = document.getElementById("checkout-items");
+    const totalEl = document.getElementById("checkout-total");
+    const hiddenCart = document.getElementById("cart_data");
+
+    tbody.innerHTML = "";
+    let total = 0;
+
+    if (cart.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4">Your cart is empty.</td></tr>';
+      totalEl.textContent = "0.00";
+      hiddenCart.value = "[]";
+      return;
+    }
+
+    cart.forEach(item => {
+      const subtotal = item.price * item.qty;
+      total += subtotal;
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${item.name}</td>
+        <td>${item.qty}</td>
+        <td>$${item.price.toFixed(2)}</td>
+        <td>$${subtotal.toFixed(2)}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    totalEl.textContent = total.toFixed(2);
+    hiddenCart.value = JSON.stringify(cart); // send cart to PHP
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    updateCartCount();
+    renderCheckout();
+  });
+</script>
+
+</body>
+</html>

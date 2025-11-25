@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Click & Tap | Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav">
+    <div class="logo">Click & <span>Tap</span></div>
+
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="contact.html">Contact</a>
+      <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+    </nav>
+
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div>
+      <h1 class="hero-title">Upgrade your desk with Click & Tap</h1>
+      <p class="hero-subtitle">
+        Mechanical keyboards, gaming mice, monitor light bars, keycaps sets and cleaning kits –
+        everything for a clean and comfy setup in one place.
+      </p>
+
+      <a href="products.html">
+        <button class="btn btn-primary">Shop All Products →</button>
+      </a>
+
+      <div style="margin-top: 1rem; font-size: 0.9rem;">
+        <strong>Popular right now:</strong>
+        Aula F75Pro • Attack Shark X11 • Keycap sets • Screen light bars
+      </div>
+    </div>
+  </section>
+
+  <!-- SHOP BY CATEGORY -->
+  <section id="shop-by-category">
+    <h2 class="section-title">Shop by category</h2>
+    <p class="hero-subtitle">Quickly jump to what you’re looking for.</p>
+
+    <div class="category-grid">
+      <a href="products.html#keyboards" class="category-card">
+        <h3>Keyboards</h3>
+        <p>75% boards and more for gaming and study.</p>
+      </a>
+
+      <a href="products.html#mice" class="category-card">
+        <h3>Mice</h3>
+        <p>Lightweight gaming mice with high DPI.</p>
+      </a>
+
+      <a href="products.html#lightbars" class="category-card">
+        <h3>Light Bars</h3>
+        <p>Monitor light bars for better eye comfort.</p>
+      </a>
+
+      <a href="products.html#keycaps" class="category-card">
+        <h3>Keycaps</h3>
+        <p>Colorful sets that fit up to 100% layouts.</p>
+      </a>
+
+      <a href="products.html#cleaning" class="category-card">
+        <h3>Cleaning Kits</h3>
+        <p>Brush, blower and tools to keep your gear fresh.</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- FEATURED PRODUCTS -->
+  <section>
+    <h2 class="section-title">Featured Products</h2>
+
+    <div class="product-grid">
+
+      <!-- PRODUCT 1 -->
+      <div class="product-card">
+        <img src="img/products/Aula/aulablack..jpg" class="product-img" alt="Aula F75Pro">
+        <h3 class="product-name">Aula F75Pro</h3>
+        <p class="product-description">75% • Hot-swap • RGB</p>
+        <p class="product-price">$55</p>
+      </div>
+
+      <!-- PRODUCT 2 -->
+      <div class="product-card">
+        <img src="img/products/Mouse/atsblack.jpg" class="product-img" alt="Attack Shark X11">
+        <h3 class="product-name">Attack Shark X11</h3>
+        <p class="product-description">22000 DPI • Lightweight</p>
+        <p class="product-price">$22.00</p>
+      </div>
+
+      <!-- PRODUCT 3 -->
+      <div class="product-card">
+        <img src="img/products/Light bar and cleaning kt/blackl.jpg" class="product-img" alt="Monitor Light Bar">
+        <h3 class="product-name">Monitor Light Bar</h3>
+        <p class="product-description">USB • Warm / Cool Light</p>
+        <p class="product-price">$14</p>
+      </div>
+
+      <!-- PRODUCT 4 -->
+      <div class="product-card">
+        <img src="img/products/Keycap/14white.jpg" class="product-img" alt="White Keycaps Set">
+        <h3 class="product-name">White Keycaps Set</h3>
+        <p class="product-description">120 Keys • PBT Material</p>
+        <p class="product-price">$14</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CONTACT SECTION -->
+  <section id="contact">
+    <h2 class="section-title">Contact Us</h2>
+    <p>Email: hello@clickandtap.store</p>
+    <p>TikTok: @clickandtap1</p>
+    <p>Telegram: <a href="https://t.me/sunhong1" target="_blank">@sunhong1</a></p>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <p>© <span id="year"></span> Click & Tap</p>
+</footer>
+
+<script>
+  // footer year
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  // cart helpers (same structure as products/cart pages)
+  function getCart() {
+    const data = localStorage.getItem("clickTapCart");
+    return data ? JSON.parse(data) : [];
+  }
+
+  function updateCartCount() {
+    const cartCountEl = document.getElementById("cart-count");
+    if (!cartCountEl) return;
+    const cart = getCart();
+    const totalQty = cart.reduce((sum, item) => sum + (item.qty || 0), 0);
+    cartCountEl.textContent = totalQty;
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    updateCartCount();
+  });
+</script>
+
+</body>
+</html>
